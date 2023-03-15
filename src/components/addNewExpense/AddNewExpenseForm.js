@@ -6,17 +6,27 @@ function AddNewExpenseForm(props) {
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredAmount, setEnteredAmount] = useState("");
   const [enteredDate, setEnteredDate] = useState("");
+  const [isValid, setIsValid] = useState(true);
 
   //input event
   const changeTitleHandler = (event) => {
+    if (event.target.value.trim().length > 0) {
+      setIsValid(true);
+    }
     setEnteredTitle(event.target.value);
   };
 
   const changeAmountHandler = (event) => {
+    if (event.target.value.trim().length > 0) {
+      setIsValid(true);
+    }
     setEnteredAmount(event.target.value);
   };
 
   const changeDateHandler = (event) => {
+    if (event.target.value.trim().length > 0) {
+      setIsValid(true);
+    }
     setEnteredDate(event.target.value);
   };
 
@@ -24,21 +34,27 @@ function AddNewExpenseForm(props) {
   const submitHandler = (event) => {
     event.preventDefault();
 
-    //saving data in an object
-    let enteredFormDate = {};
-    if (enteredTitle !== "") {
-      enteredFormDate = {
-        title: enteredTitle,
-        price: enteredAmount,
-        date: new Date(enteredDate),
-      };
-    } 
-    else {
+    if (
+      enteredTitle.trim().length === 0 ||
+      enteredAmount.trim().length === 0 ||
+      enteredDate.trim().length === 0
+    ) {
+      setIsValid(false);
       window.alert(
         "Field should not be empyt!!\nPlease enter title, amount and date."
       );
       throw new Error("Don't keep field's empyt!");
+      return;
     }
+
+    //saving data in an object
+    let enteredFormDate = {};
+
+    enteredFormDate = {
+      title: enteredTitle,
+      price: enteredAmount,
+      date: new Date(enteredDate),
+    };
 
     //passing enteredFormData from child i.e, form.js to parent i.e, addNewExpense.js
     props.onSaveExpenseData(enteredFormDate);
@@ -53,7 +69,8 @@ function AddNewExpenseForm(props) {
     // default form event
     <form onSubmit={submitHandler}>
       <div className="new-expense__controls">
-        <div className="new-expense__control">
+        {/* //adding dynamic */}
+        <div className={`new-expense__control ${!isValid && "invalid"}`}>
           <label>Title</label>
           <input
             type="text"
@@ -63,7 +80,7 @@ function AddNewExpenseForm(props) {
         </div>
       </div>
       <div className="new-expense__controls">
-        <div className="new-expense__control">
+        <div className={`new-expense__control  ${!isValid && "invalid"}`}>
           <label>Amount</label>
           <input
             type="number"
@@ -75,7 +92,7 @@ function AddNewExpenseForm(props) {
         </div>
       </div>
       <div className="new-expense__controls">
-        <div className="new-expense__control">
+        <div className={`new-expense__control ${!isValid && "invalid"}`}>
           <label>Date</label>
           <input
             type="date"

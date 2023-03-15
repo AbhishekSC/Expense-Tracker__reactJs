@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import AddNewExpense from "./components/addNewExpense/AddNewExpense";
+import ExpenseAlert from "./components/alerts/ExpenseAlert";
 import Expenses from "./components/Expenses";
 
 const DUMMY_EXPENSE = [
@@ -27,15 +28,18 @@ const DUMMY_EXPENSE = [
 
 function App() {
   const [enteredExpense, setEnteredExpense] = useState(DUMMY_EXPENSE);
+  const [data, setData] = useState("none");
 
   const AddNewExpenseHandler = (expense) => {
     setEnteredExpense((prevExpenses) => {
       return [expense, ...prevExpenses];
     });
+    setData(expense.title);
   };
 
   return (
     <div>
+      <ExpenseAlert data={data} />
       <AddNewExpense onAddNewExpense={AddNewExpenseHandler} />
       <Expenses items={enteredExpense} />
     </div>
